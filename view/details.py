@@ -10,7 +10,7 @@ class ButtonBar(wx.Panel):
         buttons = []
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         for label in argc:
-            button =(wx.Button(self, wx.ID_ANY, label, name=label))
+            button =wx.Button(self, wx.ID_ANY, label, name=label)
             button.Bind(wx.EVT_BUTTON, main_frame.on_button)
             buttons.append(button)
             sizer.Add(button, 1, wx.ALL, 20)
@@ -67,17 +67,24 @@ class DetailsPanel(wx.Panel):
         self.h1 = wx.StaticText(self, wx.ID_ANY,
                     "Details for variant %s %s" % (self.gene, self.variant))
         self.h1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
-        self.headers = DetailsHeaders(self)
-        self.ctrls = DetailsCtrls(self, self.details)
+        p = wx.Panel(self, style=wx.SUNKEN_BORDER)
+        p.SetBackgroundColour(wx.WHITE)
+        self.headers = DetailsHeaders(p)
+        self.ctrls = DetailsCtrls(p, self.details)
         self.button_bar = ButtonBar(self, "<<< Previous", "Next >>>")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.h1, 1, wx.ALL, 10)
+        sizer.Add(self.h1, 0, wx.ALL, 10)
+        b_sizer = wx.BoxSizer(wx.VERTICAL)
         for i in range(len(self.headers)):
             s = wx.BoxSizer(wx.HORIZONTAL)
             s.Add(self.headers[i], 1, wx.EXPAND|wx.ALL, 1)
             s.Add(self.ctrls[i], 2, wx.EXPAND|wx.ALL, 1)
-            sizer.Add(s, 1, wx.EXPAND|wx.ALL, 1)
+            b_sizer.Add(s, 1, wx.EXPAND|wx.ALL, 1)
+            b_sizer.Add(wx.StaticLine(p, wx.ID_ANY,
+                                style=wx.LI_HORIZONTAL), 0, wx.ALL|wx.EXPAND, 0)
+        p.SetSizer(b_sizer)
+        sizer.Add(p,  1, wx.EXPAND|wx.ALL, 1)
         sizer.AddStretchSpacer()
         sizer.Add(self.button_bar, 0, wx.EXPAND|wx.ALIGN_RIGHT)
         self.SetSizer(sizer)

@@ -5,7 +5,8 @@ from sqlalchemy import Integer, ForeignKey, String, Unicode, Date, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relation
 
-engine = create_engine("sqlite:///workbench.db")
+db_name = "sqlite:///workbench.db"
+engine = create_engine(db_name)
 DeclarativeBase = declarative_base(engine)
 metadata = DeclarativeBase.metadata
 

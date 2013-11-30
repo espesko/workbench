@@ -51,7 +51,7 @@ class ExtDBCtrls(list):
 #----------------------------------------------------------------------
 class ExtDBRow(wx.Panel):
     def __init__(self, parent, extdb):
-        wx.Panel.__init__(self, parent)
+        wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
         self.parent = parent
         self.extdb = extdb
         ctrls = ExtDBCtrls(self, extdb)
@@ -83,7 +83,7 @@ class ExternalDBPanel(wx.Panel):
         sizer.Add(h1, 0, wx.ALL|wx.EXPAND, 10)
         sizer.Add(ExtDBHeaders(self), 0, wx.ALL|wx.EXPAND,2)
         for extdb in self.extdbs:
-            sizer.Add(ExtDBRow(self, extdb), 0, wx.ALL|wx.EXPAND, 2)
+            sizer.Add(ExtDBRow(self, extdb), 0, wx.ALL|wx.EXPAND)
         self.SetSizer(sizer)
         self.is_changed = False
     def save_changes(self):

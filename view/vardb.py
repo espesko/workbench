@@ -46,7 +46,7 @@ class VarDBCtrls(list):
 #----------------------------------------------------------------------
 class VarDBRow(wx.Panel):
     def __init__(self, parent, vdb):
-        wx.Panel.__init__(self, parent)
+        wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
         self.parent = parent
         self.vdb = vdb
         ctrls = VarDBCtrls(self, vdb)
@@ -86,13 +86,13 @@ class VarDBPanel(wx.Panel):
         for vdb in self.vdbs:
             if not vdb["valid"]:
                 continue
-            sizer.Add(VarDBRow(self, vdb), 0, wx.ALL|wx.EXPAND, 2)
+            sizer.Add(VarDBRow(self, vdb), 0, wx.ALL|wx.EXPAND)
         sizer.Add(h2, 0, wx.ALL|wx.EXPAND, 10)
         sizer.Add(VarDBHeaders(self, 0), 0, wx.ALL|wx.EXPAND,2)
         for vdb in self.vdbs:
             if vdb["valid"]:
                 continue
-            sizer.Add(VarDBRow(self, vdb), 0, wx.ALL|wx.EXPAND, 2)
+            sizer.Add(VarDBRow(self, vdb), 0, wx.ALL|wx.EXPAND)
         self.SetSizer(sizer)
         self.Fit()
         self.is_changed = False

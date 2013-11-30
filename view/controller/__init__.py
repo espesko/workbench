@@ -2,16 +2,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 #from model import VarDB, Frequency, ExternalDB, Prediction, Details
+from model import db_name
 
 class Controller(object):
-    def __init__(self):
-        pass
 
     def connect_to_database(self):
         """
         Connect to database and return a Session object
         """
-        engine = create_engine("sqlite:///workbench.db")
+        engine = create_engine(db_name)
         Session = sessionmaker(bind=engine)
         session = Session()
         return session

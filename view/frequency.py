@@ -43,11 +43,22 @@ class FreqCtrls(list):
                                  name="contradictory"), 2))
         self.append((wx.CheckBox(parent, wx.ID_ANY, "",
                                       style=wx.NO_BORDER), 1))
+        for ctrl in self: # add colours for illustration
+            val = ctrl[0].GetLabel()
+            if not val.lstrip("0.").isdigit():
+                continue
+            if float(val)>0.01:
+                colour = "#007700"
+            elif float(val)>0.001:
+                colour = "#00dd00"
+            else:
+                colour = wx.WHITE
+            ctrl[0].SetBackgroundColour(colour)
 
 #----------------------------------------------------------------------
 class FreqRow(wx.Panel):
     def __init__(self, parent, freq):
-        wx.Panel.__init__(self, parent)
+        wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
         self.parent = parent
         self.freq = freq
         ctrls = FreqCtrls(self, freq)
@@ -84,13 +95,13 @@ class FrequencyPanel(wx.Panel):
         for freq in self.freqs:
             if not freq["neutral"]:
                 continue
-            sizer.Add(FreqRow(self, freq), 0, wx.ALL|wx.EXPAND, 2)
+            sizer.Add(FreqRow(self, freq), 0, wx.ALL|wx.EXPAND)
         sizer.Add(h2, 0, wx.ALL|wx.EXPAND, 10)
         sizer.Add(FreqHeaders(self), 0, wx.ALL|wx.EXPAND,2)
         for freq in self.freqs:
             if freq["neutral"]:
                 continue
-            sizer.Add(FreqRow(self, freq), 0, wx.ALL|wx.EXPAND, 2)
+            sizer.Add(FreqRow(self, freq), 0, wx.ALL|wx.EXPAND)
         self.SetSizer(sizer)
         self.is_changed = False
     def save_changes(self):

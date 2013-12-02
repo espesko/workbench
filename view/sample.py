@@ -7,12 +7,17 @@ class FetchSamplePanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
         self.parent = parent
+        main_frame = self.GetTopLevelParent()
         self.sample_id = wx.TextCtrl(self, wx.ID_ANY, "000001A")
         self.fetch_btn = wx.Button(self, wx.ID_ANY, "Fetch data")
+        self.next_btn = wx.Button(self, wx.ID_ANY, "Next  >>>", name ="Next  >>>")
+        self.next_btn.Hide() # Hide until sample is loaded
         self.Bind(wx.EVT_BUTTON, self.on_fetch, self.fetch_btn)
+        self.Bind(wx.EVT_BUTTON, main_frame.on_button, self.next_btn)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(self.sample_id, 0, wx.ALL, 10)
         sizer.Add(self.fetch_btn, 0, wx.ALL, 10)
+        sizer.Add(self.next_btn, 0, wx.ALL, 10)
         self.SetSizer(sizer)
     def on_fetch(self, event):
         self.parent.fetch_sample(self.sample_id.GetLabel())
@@ -71,6 +76,8 @@ class SamplePanel(wx.Panel):
             self.parent.Show()
 
     def show_sample(self):
+        self.fetch_sample_panel.next_btn.Show()
+        self.fetch_sample_panel.Layout()
         h1 = wx.StaticText(self, wx.ID_ANY, "Sample info")
         h2 = wx.StaticText(self, wx.ID_ANY, "QC report")
         h3 = wx.StaticText(self, wx.ID_ANY, "Coverage")

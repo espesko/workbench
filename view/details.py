@@ -71,7 +71,7 @@ class DetailsPanel(wx.Panel):
         p.SetBackgroundColour(wx.WHITE)
         self.headers = DetailsHeaders(p)
         self.ctrls = DetailsCtrls(p, self.details)
-        self.button_bar = ButtonBar(self, "<<< Previous", "Next >>>")
+        self.button_bar = ButtonBar(self, "<<<  Previous", "Next  >>>")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.h1, 0, wx.ALL, 10)

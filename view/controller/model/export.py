@@ -14,6 +14,34 @@ DeclarativeBase = declarative_base(engine)
 metadata = DeclarativeBase.metadata
 
 
+class RefView(dict):
+     def __init__(self, id, gene, variant, source, references,
+                  previous_evaluations, high_quality_evidence):
+        dict.__init__(self)
+        self["id"] = id  # unique row id from database
+        self["gene"] = gene
+        self["variant"] = variant
+        self["source"] = source
+        self["references"] = references
+        self["previous_evaluations"] = previous_evaluations
+        self["high_quality_evidence"] = high_quality_evidence
+        self.is_changed = False
+     def __del__(self):
+        if self.is_changed:
+            print "%s %d is changed" % (type(self), self["id"])
+
+class References(DeclarativeBase):
+    __tablename__ = "references"
+    
+    id = Column(Integer, primary_key=True)
+    gene = Column("gene", String(20))
+    variant = Column("variant", String(20))
+    source = Column("source", String(50))
+    references = Column("references", String(200))
+    previous_evaluations = Column("previous_evaluations", String(200))
+    high_quality_evidence = Column("high_quality_evidence", String(50))
+        
+       
 class SamplView(dict):
     def __init__(self, id, sample, panel, sample_taken, genotyping,
                  variant_calling, qc_status, qc_report, coverage):

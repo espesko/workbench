@@ -3,7 +3,9 @@ from vardb import VarDBPanel, VarDBRow
 from frequency import FrequencyPanel, FreqRow
 from external_db import ExternalDBPanel, ExtDBRow
 from prediction import PredictionPanel, PredRow
+from references import ReferencesPanel, RefPanel
 from details import DetailsPanel
+from refeval import RefEvalPanel
 from sample import SamplePanel
 import controller.export
 
@@ -159,6 +161,30 @@ class PredictionTab(wx.Panel):
         self.main_panel.save_changes()
         
 #----------------------------------------------------------------------
+class ReferencesTab(wx.Panel): 
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        self.main_panel = ReferencesPanel(self)
+        self.side_panel = RefEvalPanel(self)
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer.Add(self.main_panel, 2, wx.ALL|wx.EXPAND, 2)
+        self.sizer.Add(wx.StaticLine(self, wx.ID_ANY,
+                                style=wx.LI_VERTICAL), 0, wx.ALL|wx.EXPAND, 0)
+        self.sizer.Add(self.side_panel, 1, wx.ALL|wx.EXPAND, 2)
+        self.SetSizer(self.sizer)
+        self.Bind(wx.EVT_BUTTON, self.on_evaluate)
+ 
+    def on_evaluate(self, event):
+        index = int(event.GetEventObject().GetName())
+        ref = self.main_panel.refs[index]
+        self.side_panel.new_obj(ref)
+        event.Skip()
+    def is_changed(self):
+        return self.main_panel.is_changed
+    def save_changes(self):
+        self.main_panel.save_changes()
+        
+#----------------------------------------------------------------------
 class MainFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title="genAP wb", size=(1400, 800))
@@ -176,11 +202,13 @@ class MainFrame(wx.Frame):
         self.vardb_tab = VarDBTab(self.notebook)
         self.frequency_tab = FrequencyTab(self.notebook)
         self.external_db_tab = ExternalDBTab(self.notebook)
-        self.prediction_db_tab = PredictionTab(self.notebook)
+        self.prediction_tab = PredictionTab(self.notebook)
+        self.references_tab = ReferencesTab(self.notebook)
         self.notebook.AddPage(self.vardb_tab, "VarDB")
         self.notebook.AddPage(self.frequency_tab, "Frequency")
         self.notebook.AddPage(self.external_db_tab, "External DB")
-        self.notebook.AddPage(self.prediction_db_tab, "Prediction")
+        self.notebook.AddPage(self.prediction_tab, "Prediction")
+        self.notebook.AddPage(self.references_tab, "References")
         sample = self.sample_tab.sample
         self.status_bar.SetStatusText("Sample %s loaded | Gene Panel: %s" %
                                       (sample["sample"], sample["panel"]))
@@ -204,7 +232,7 @@ class MainFrame(wx.Frame):
             stat = self.save_tab(3, "External DB entries have changed") 
             if stat == wx.ID_CANCEL:
                 return stat
-        if self.prediction_db_tab.is_changed():
+        if self.prediction_tab.is_changed():
             stat = self.save_tab(4, "Prediction entries have changed")
         return stat
     def save_tab(self, tab, cap=""):
@@ -219,9 +247,9 @@ class MainFrame(wx.Frame):
         return choice
     def on_button(self, event):
         action = event.GetEventObject().GetName()
-        if action == "<<< Previous":
+        if action == "<<<  Previous":
             self.notebook.AdvanceSelection(forward = False)
-        elif action == "Next >>>":
+        elif action == "Next  >>>":
             self.notebook.AdvanceSelection()
         else:
             print "Action: ", action

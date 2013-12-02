@@ -1,11 +1,13 @@
 from model import Sample, SamplView, VarDB, VarDBView, Frequency, FreqView
 from model import ExternalDB, ExtDBView, Prediction, PredView, Details, DetailView
+from model import References, RefView
 import sample
 import vardb
 import frequency
 import external_db
 import prediction
 import details
+import references
 
 def export_samples():
     records = sample.get_all_sample_records()
@@ -37,6 +39,11 @@ def export_details():
     for record in records:
         details.add_details_record(record, export=True)
 
+def export_references():
+    records = references.get_all_ref_records()
+    for record in records:
+        references.add_ref_record(record, export=True)
+
 def export_all():
     export_samples()
     export_vardbs()
@@ -44,6 +51,7 @@ def export_all():
     export_external_dbs()
     export_predictions()
     export_details()
+    export_references()
     from model.export import filename
     return filename
 
